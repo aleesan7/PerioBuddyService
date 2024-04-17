@@ -8,8 +8,8 @@ const port = process.env.PORT || 3000;
 //var elections = require('./src/routes/elecciones');
 //var images = require('./routes/images');
 var users = require('./routes/users')
-//var albums = require('./routes/albums')
-//var text = require('./routes/text')
+var content = require('./routes/content')
+var tips = require('./routes/tips')
 
 const app = express();
 
@@ -21,8 +21,8 @@ app.use(express.urlencoded({limit: '25mb'}));
 
 //app.use('', images);
 app.use('', users);
-//app.use('', albums);
-//app.use('', text);
+app.use('', content);
+app.use('', tips);
 
 app.get('/', (req, res) => {
     res.json({ message: 'This is the PerioBuddy Service!' });
