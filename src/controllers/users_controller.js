@@ -97,9 +97,31 @@ const updateInfo = async (req, res) => {
   
   }
 
+  const getUserInfo = (req, res) =>{
+
+    var email = req.params.email;
+  
+    db.query(
+      `SELECT * FROM Users WHERE email = '${email}'`,
+      (err, result) => {
+        if (err) {
+            return res.status(400).send({
+            msg: err
+            });
+        }else{
+          //console.log(result)
+          return res.status(200).send({
+            user: result[0]
+          })
+        }
+      }
+    );
+  }
+
 
 module.exports = {
     login : login,
     register : register,
-    updateInfo : updateInfo
+    updateInfo : updateInfo,
+    getUserInfo : getUserInfo
 }
