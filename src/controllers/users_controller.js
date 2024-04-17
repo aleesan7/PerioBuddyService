@@ -81,34 +81,6 @@ const register = (req, res, next) => {
 const updateInfo = async (req, res) => {
 
     var { firstName, lastName, birthdate, gender, email } = req.body;
-  
-    /*var folderPath = `Fotos_Perfil/${nombreFoto}.jpg`;
-  
-    // Se convierte la imagen a un buffer
-    const buff = Buffer.from(foto, 'base64');
-  
-    // Se colocal la region del bucket y las credenciales
-    // Nunca subir las credecioanes a github o gitlab
-    // posiblemete les puede bloquar la cuenta de aws por que expusieron las credenciales en un repositorio publico
-    aws.config.update({
-      accessKeyId: 'AKIA3WBJ23QODDJJOXND',
-      secretAccessKey: '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',
-      region:  'us-east-1'
-    }); 
-  
-    // Se crea una valirable que contiene el servicio o caracteristicas S3
-    const s3 = new aws.S3();
-    
-    const paramsS3 = {
-      Bucket     : 'practica1-g7-imagenes',
-      Key        : folderPath,
-      Body       : buff,
-      ContentType: 'image'
-    }
-  
-    const s3Resp = await s3.upload(paramsS3).promise();
-    console.log(s3Resp.Location);*/
-  
     
     db.query(
       `UPDATE Users SET firstName = '${firstName}', lastName = '${lastName}', birthDate = '${birthdate}', gender = '${gender}' WHERE email = '${email}'`,
