@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 var users = require('./routes/users')
 var content = require('./routes/content')
 var tips = require('./routes/tips')
+var reminders = require('./routes/reminders')
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({limit: '25mb'}));
 app.use('', users);
 app.use('', content);
 app.use('', tips);
+app.use('', reminders);
 
 app.get('/', (req, res) => {
     res.json({ message: 'This is the PerioBuddy Service!' });
