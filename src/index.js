@@ -11,6 +11,7 @@ var users = require('./routes/users')
 var content = require('./routes/content')
 var tips = require('./routes/tips')
 var reminders = require('./routes/reminders')
+var diagnosis = require('./routes/diagnosis')
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('', users);
 app.use('', content);
 app.use('', tips);
 app.use('', reminders);
+app.use('', diagnosis);
 
 app.get('/', (req, res) => {
     res.json({ message: 'This is the PerioBuddy Service!' });

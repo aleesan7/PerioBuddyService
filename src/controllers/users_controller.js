@@ -97,6 +97,52 @@ const updateInfo = async (req, res) => {
   
   }
 
+  const updateProfilePic = async (req, res) => {
+
+    var { idUser, picName, picture } = req.body;
+
+    var folderPath = `Profile_Pictures/${picName}.jpg`;
+
+    // Se convierte la imagen a un buffer
+    const buff = Buffer.from(picture, 'base64');
+
+    // Se colocal la region del bucket y las credenciales
+    // Nunca subir las credecioanes a github o gitlab
+    // posiblemete les puede bloquar la cuenta de aws por que expusieron las credenciales en un repositorio publico
+    aws.config.update({
+        accessKeyId: 'AKIA2UC3CKEJIJQIPVRX',
+        secretAccessKey: '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',
+        region:  'us-east-2'
+    }); 
+
+    // Se crea una valirable que contiene el servicio o caracteristicas S3
+    const s3 = new aws.S3();
+    
+    const paramsS3 = {
+        Bucket     : 'periobuddybucket',
+        Key        : folderPath,
+        Body       : buff,
+        ContentType: 'image'
+    }
+
+    const s3Resp = await s3.upload(paramsS3).promise();
+    console.log(s3Resp.Location);
+
+    db.query(
+        `UPDATE Users SET urlProfPic = '${s3Resp.Location}' WHERE idUser = '${idUser}'`,
+        (err, result) => {
+        if (err) {
+            return res.status(400).send({
+            msg: err
+            });
+        }
+        }
+      );
+      
+      return res.status(200).json({ message: 'Foto de perfil actualizada exitosamente' }); 
+
+  }
+
   const getUserInfo = (req, res) =>{
 
     var email = req.params.email;
@@ -123,5 +169,6 @@ module.exports = {
     login : login,
     register : register,
     updateInfo : updateInfo,
+    updateProfilePic : updateProfilePic,
     getUserInfo : getUserInfo
 }
