@@ -97,7 +97,7 @@ const updateInfo = async (req, res) => {
   
   }
 
-  const updateProfilePic = async (req, res) => {
+const updateProfilePic = async (req, res) => {
 
     var { idUser, picName, picture } = req.body;
 
@@ -110,59 +110,59 @@ const updateInfo = async (req, res) => {
     // Nunca subir las credecioanes a github o gitlab
     // posiblemete les puede bloquar la cuenta de aws por que expusieron las credenciales en un repositorio publico
     aws.config.update({
-        accessKeyId: 'AKIA2UC3CKEJIJQIPVRX',
-        secretAccessKey: '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',
-        region:  'us-east-2'
+    accessKeyId: 'AKIA2UC3CKEJIJQIPVRX',
+    secretAccessKey: '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',
+    region:  'us-east-2'
     }); 
 
     // Se crea una valirable que contiene el servicio o caracteristicas S3
     const s3 = new aws.S3();
-    
+
     const paramsS3 = {
-        Bucket     : 'periobuddybucket',
-        Key        : folderPath,
-        Body       : buff,
-        ContentType: 'image'
+    Bucket     : 'periobuddybucket',
+    Key        : folderPath,
+    Body       : buff,
+    ContentType: 'image'
     }
 
     const s3Resp = await s3.upload(paramsS3).promise();
     console.log(s3Resp.Location);
 
     db.query(
-        `UPDATE Users SET urlProfPic = '${s3Resp.Location}' WHERE idUser = '${idUser}'`,
+    `UPDATE Users SET urlProfPic = '${s3Resp.Location}' WHERE idUser = '${idUser}'`,
+    (err, result) => {
+    if (err) {
+        return res.status(400).send({
+        msg: err
+        });
+    }
+    }
+    );
+
+    return res.status(200).json({ message: 'Foto de perfil actualizada exitosamente' }); 
+
+}
+
+const getUserInfo = (req, res) =>{
+
+    var email = req.params.email;
+
+    db.query(
+        `SELECT * FROM Users WHERE email = '${email}'`,
         (err, result) => {
         if (err) {
             return res.status(400).send({
             msg: err
             });
-        }
-        }
-      );
-      
-      return res.status(200).json({ message: 'Foto de perfil actualizada exitosamente' }); 
-
-  }
-
-  const getUserInfo = (req, res) =>{
-
-    var email = req.params.email;
-  
-    db.query(
-      `SELECT * FROM Users WHERE email = '${email}'`,
-      (err, result) => {
-        if (err) {
-            return res.status(400).send({
-            msg: err
-            });
         }else{
-          //console.log(result)
-          return res.status(200).send({
+            //console.log(result)
+            return res.status(200).send({
             user: result[0]
-          })
+            })
         }
-      }
+        }
     );
-  }
+}
 
 
 module.exports = {
